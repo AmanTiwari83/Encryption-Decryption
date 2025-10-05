@@ -1,0 +1,41 @@
+
+## 🧠 Important Concepts
+
+### 1️⃣ AES (Advanced Encryption Standard)
+- A **symmetric encryption algorithm** — the same key is used for both encryption and decryption.  
+- Works on **16-byte (128-bit)** data blocks internally.  
+- **AES-256** uses a **32-byte (256-bit)** key, making it extremely strong and secure.  
+- Standardized by NIST and widely used in the industry.
+
+---
+
+### 2️⃣ GCM (Galois/Counter Mode)
+- A special *mode of operation* for AES.  
+- Combines two functions:
+  - **Counter Mode (CTR)** → encrypts data efficiently.  
+  - **Galois Mode (GMAC)** → authenticates data and checks integrity.  
+- Detects any modification to the ciphertext.  
+- Much safer than older modes like **AES-CBC**, which lacked authentication.
+
+---
+
+### 3️⃣ IV (Initialization Vector)
+- A **random, unique** value generated for every encryption.  
+- Ensures that encrypting the same plaintext multiple times results in **different ciphertexts**.  
+- The IV **does not need to be secret**, but it **must never be reused** with the same key.  
+- In AES-GCM, the standard IV size is **12 bytes (96 bits)**.
+
+---
+
+### 4️⃣ Ciphertext
+- The **encrypted** version of your plaintext.  
+- Appears as random data — completely unreadable without the correct key and IV.  
+- If the IV or key changes, decryption will fail or produce garbage output.
+
+---
+
+### 5️⃣ Authentication Tag
+- Also known as the **Auth Tag** or **GCM Tag**.  
+- A 16-byte (128-bit) cryptographic checksum generated during encryption.  
+- Ensures that the ciphertext has not been modified or corrupted.  
+- During decryption, if the tag does not match, it throws an error:  

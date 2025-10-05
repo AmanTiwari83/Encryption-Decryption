@@ -1,0 +1,22 @@
+node_modules/
+.env
+.DS_Store
+npm-debug.log
+.vscode/
+.idea/
+dist/
+coverage/
+*.iml
+yarn-error.log
+
+# Ignore environment variable files
+.env.local
+.env.*.local
+
+# Ignore log files
+logs            
+
+*.log
+pakage-lock.json
+yarn.lock
+.pnp
