@@ -1,0 +1,59 @@
+flowchart TD
+
+%% =========================
+%% EXTERNAL ENTITIES
+%% =========================
+A["Client System"] -->|"POST /availability (supplierCode header, common request body)"| B["hotel.controller.ts"]
+
+%% =========================
+%% PROCESS FLOW
+%% =========================
+B --> C["Global Middleware (Validate supplierCode)"]
+C --> D["booking.flow.service.ts (Main Orchestrator)"]
+D --> E["search-parse-utils.ts (Parse & Validate Common Request)"]
+E --> F["verifySupplierRequest.ts (Supplier-specific Validation)"]
+
+F --> G["Hotel Code Retrieval (Inside booking.flow.service.ts)"]
+G -->|hotelCode present| H1["Use hotelCode from request"]
+G -->|hotelCode missing| H2["Fetch hotel codes from MongoDB city collection using cityCode"]
+H1 --> I["buildSupplierRequestForSearch() (Build supplier-specific request)"]
+H2 --> I
+
+I --> J["Call Supplier API (External Supplier System)"]
+J --> K["Resolve & Merge (Merge supplier response + static hotel data)"]
+
+%% =========================
+%% DATA STORES
+%% =========================
+subgraph MongoDB
+M1["(city collection)"]
+M2["(hotels collection)"]
+end
+
+subgraph ConfigDB
+M3["(Supplier Config DB)"]
+end
+
+%% =========================
+%% DATA FLOWS TO/FROM DATA STORES
+%% =========================
+H2 --> M1
+I --> M3
+K --> M2
+
+%% =========================
+%% EXTERNAL SUPPLIER
+%% =========================
+J -->|"Supplier Response"| K
+K -->|"Common Availability Response"| A
+
+%% =========================
+%% STYLING
+%% =========================
+classDef process fill:#E6F2FF,stroke:#0366d6,stroke-width:2px,rx:10,ry:10
+classDef datastore fill:#FFF5E6,stroke:#ff9d00,stroke-width:2px,rx:10,ry:10
+classDef external fill:#E8FFE8,stroke:#00A36C,stroke-width:2px,rx:10,ry:10
+
+class A,J external
+class B,C,D,E,F,G,H1,H2,I,K process
+class M1,M2,M3 datastore
